@@ -1,0 +1,454 @@
+{
+	"id": "00d90c3e-bfa9-4332-b3c7-0e8c226acd50",
+	"prevId": "00000000-0000-0000-0000-000000000000",
+	"version": "7",
+	"dialect": "postgresql",
+	"tables": {
+		"public.companies": {
+			"name": "companies",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "integer",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"railway_category_id": {
+					"name": "railway_category_id",
+					"type": "smallint",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"name_kana": {
+					"name": "name_kana",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"name_formal": {
+					"name": "name_formal",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"name_romaji": {
+					"name": "name_romaji",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"name_en": {
+					"name": "name_en",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"name_en_formal": {
+					"name": "name_en_formal",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"website_url": {
+					"name": "website_url",
+					"type": "varchar(512)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"type": {
+					"name": "type",
+					"type": "company_type",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'other'"
+				},
+				"status": {
+					"name": "status",
+					"type": "entity_status",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'active'"
+				},
+				"sort_order": {
+					"name": "sort_order",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.lines": {
+			"name": "lines",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "integer",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"company_id": {
+					"name": "company_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"name_kana": {
+					"name": "name_kana",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"name_formal": {
+					"name": "name_formal",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"name_en": {
+					"name": "name_en",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"name_en_formal": {
+					"name": "name_en_formal",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"color_hex": {
+					"name": "color_hex",
+					"type": "varchar(8)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"color_name": {
+					"name": "color_name",
+					"type": "varchar(64)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"type": {
+					"name": "type",
+					"type": "smallint",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"longitude": {
+					"name": "longitude",
+					"type": "real",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"latitude": {
+					"name": "latitude",
+					"type": "real",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"map_zoom": {
+					"name": "map_zoom",
+					"type": "smallint",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"status": {
+					"name": "status",
+					"type": "entity_status",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'active'"
+				},
+				"sort_order": {
+					"name": "sort_order",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"lines_company_id_companies_id_fk": {
+					"name": "lines_company_id_companies_id_fk",
+					"tableFrom": "lines",
+					"tableTo": "companies",
+					"columnsFrom": ["company_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.prefectures": {
+			"name": "prefectures",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "smallint",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(16)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"name_kana": {
+					"name": "name_kana",
+					"type": "varchar(32)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"name_en": {
+					"name": "name_en",
+					"type": "varchar(32)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"region_id": {
+					"name": "region_id",
+					"type": "varchar(16)",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"prefectures_region_id_regions_id_fk": {
+					"name": "prefectures_region_id_regions_id_fk",
+					"tableFrom": "prefectures",
+					"tableTo": "regions",
+					"columnsFrom": ["region_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.regions": {
+			"name": "regions",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "varchar(16)",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(32)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"name_en": {
+					"name": "name_en",
+					"type": "varchar(32)",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.stations": {
+			"name": "stations",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "integer",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"group_id": {
+					"name": "group_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"name_kana": {
+					"name": "name_kana",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"name_romaji": {
+					"name": "name_romaji",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"name_en": {
+					"name": "name_en",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"name_en_formal": {
+					"name": "name_en_formal",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"line_id": {
+					"name": "line_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"prefecture_id": {
+					"name": "prefecture_id",
+					"type": "smallint",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"postal_code": {
+					"name": "postal_code",
+					"type": "varchar(16)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"address": {
+					"name": "address",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"longitude": {
+					"name": "longitude",
+					"type": "real",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"latitude": {
+					"name": "latitude",
+					"type": "real",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"opened_on": {
+					"name": "opened_on",
+					"type": "date",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"closed_on": {
+					"name": "closed_on",
+					"type": "date",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"status": {
+					"name": "status",
+					"type": "entity_status",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'active'"
+				},
+				"sort_order": {
+					"name": "sort_order",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"stations_line_id_lines_id_fk": {
+					"name": "stations_line_id_lines_id_fk",
+					"tableFrom": "stations",
+					"tableTo": "lines",
+					"columnsFrom": ["line_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"stations_prefecture_id_prefectures_id_fk": {
+					"name": "stations_prefecture_id_prefectures_id_fk",
+					"tableFrom": "stations",
+					"tableTo": "prefectures",
+					"columnsFrom": ["prefecture_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		}
+	},
+	"enums": {
+		"public.company_type": {
+			"name": "company_type",
+			"schema": "public",
+			"values": ["other", "jr", "major_private", "semi_major"]
+		},
+		"public.entity_status": {
+			"name": "entity_status",
+			"schema": "public",
+			"values": ["active", "pre_opening", "defunct"]
+		}
+	},
+	"schemas": {},
+	"sequences": {},
+	"roles": {},
+	"policies": {},
+	"views": {},
+	"_meta": {
+		"columns": {},
+		"schemas": {},
+		"tables": {}
+	}
+}
