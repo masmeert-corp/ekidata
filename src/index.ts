@@ -14,7 +14,15 @@ import { KuroshiroService } from "@/services/kuroshiro";
 
 const seed = Effect.gen(function* () {
 	const db = yield* DrizzleService;
-	const dir = "./data";
+	const dir = "./src/data";
+
+	// Clear tables
+	yield* Effect.log("Clearing existing data...");
+	yield* Effect.promise(() => db.delete(table.stations));
+	yield* Effect.promise(() => db.delete(table.lines));
+	yield* Effect.promise(() => db.delete(table.companies));
+	yield* Effect.promise(() => db.delete(table.prefectures));
+	yield* Effect.promise(() => db.delete(table.regions));
 
 	yield* Effect.log("Parsing regions...");
 	const regionData = yield* parseRegions(dir);
@@ -38,8 +46,14 @@ const seed = Effect.gen(function* () {
 	yield* Effect.promise(() => db.insert(table.lines).values(lineData));
 	yield* Effect.log(`Inserted ${lineData.length} lines`);
 
+	const validLineIds = new Set(lineData.map((l) => l.id));
 	yield* Effect.log("Parsing stations...");
-	const stationData = yield* parseStations(dir);
+	const allStations = yield* parseStations(dir);
+	const stationData = allStations.filter((s) => validLineIds.has(s.lineId));
+	yield* Effect.log(
+		`Filtered ${allStations.length - stationData.length} stations with missing line references`,
+	);
+
 	const batchSize = 1000;
 	for (let i = 0; i < stationData.length; i += batchSize) {
 		const batch = stationData.slice(i, i + batchSize);

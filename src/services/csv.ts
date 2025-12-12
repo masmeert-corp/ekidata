@@ -35,7 +35,7 @@ class CsvService extends Effect.Service<CsvService>()("CsvService", {
 					const result = Papa.parse(content, {
 						header: true,
 						skipEmptyLines: true,
-						dynamicTyping: true,
+						dynamicTyping: false,
 					});
 
 					const firstError = result.errors[0];
