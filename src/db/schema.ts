@@ -13,7 +13,11 @@ import {
 	varchar,
 } from "drizzle-orm/pg-core";
 
-export const entityStatusEnum = pgEnum("entity_status", ["active", "pre_opening", "defunct"]);
+export const entityStatusEnum = pgEnum("entity_status", [
+	"active",
+	"pre_opening",
+	"defunct",
+]);
 
 export const companyTypeEnum = pgEnum("company_type", [
 	"other",
