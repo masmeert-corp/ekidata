@@ -39,48 +39,23 @@ export class KuroshiroService extends Effect.Service<KuroshiroService>()(
 					}),
 			});
 
+			const convert = (text: string, options: ConvertOptions) =>
+				Effect.tryPromise({
+					try: () => kuroshiro.convert(text, options),
+					catch: (e) =>
+						new KuroshiroConvertError({
+							message: e instanceof Error ? e.message : "Failed to convert",
+							input: text,
+						}),
+				});
+
 			return {
-				toHiragana: (text: string) =>
-					Effect.tryPromise({
-						try: () => kuroshiro.convert(text, { to: "hiragana" }),
-						catch: (e) =>
-							new KuroshiroConvertError({
-								message: e instanceof Error ? e.message : "Failed to convert",
-								input: text,
-							}),
-					}),
-
-				toKatakana: (text: string) =>
-					Effect.tryPromise({
-						try: () => kuroshiro.convert(text, { to: "katakana" }),
-						catch: (e) =>
-							new KuroshiroConvertError({
-								message: e instanceof Error ? e.message : "Failed to convert",
-								input: text,
-							}),
-					}),
-
+				toHiragana: (text: string) => convert(text, { to: "hiragana" }),
+				toKatakana: (text: string) => convert(text, { to: "katakana" }),
 				toRomaji: (text: string, system: RomajiSystem = "hepburn") =>
-					Effect.tryPromise({
-						try: () =>
-							kuroshiro.convert(text, { to: "romaji", romajiSystem: system }),
-						catch: (e) =>
-							new KuroshiroConvertError({
-								message: e instanceof Error ? e.message : "Failed to convert",
-								input: text,
-							}),
-					}),
-
+					convert(text, { to: "romaji", romajiSystem: system }),
 				toFurigana: (text: string) =>
-					Effect.tryPromise({
-						try: () =>
-							kuroshiro.convert(text, { to: "hiragana", mode: "furigana" }),
-						catch: (e) =>
-							new KuroshiroConvertError({
-								message: e instanceof Error ? e.message : "Failed to convert",
-								input: text,
-							}),
-					}),
+					convert(text, { to: "hiragana", mode: "furigana" }),
 
 				isJapanese: (text: string) => Kuroshiro.Util.isJapanese(text),
 				hasHiragana: (text: string) => Kuroshiro.Util.hasHiragana(text),

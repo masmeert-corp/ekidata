@@ -1,7 +1,7 @@
 import { Schema } from "effect";
 
 import { EntityStatus } from "@/schemas/shared";
-import { NullDate, NullNum, NullStr } from "@/schemas/utils";
+import { NullDate, NullNum, NullStr, PointSchema } from "@/schemas/utils";
 
 export const StationCsvSchema = Schema.Struct({
 	station_cd: Schema.NumberFromString,
@@ -23,29 +23,29 @@ export const StationCsvSchema = Schema.Struct({
 	e_sort: NullNum,
 });
 
-const PointSchema = Schema.Struct({
-	x: Schema.Number,
-	y: Schema.Number,
-});
-
 export const StationDbSchema = Schema.Struct({
-	id: Schema.Number,
-	groupId: Schema.Number,
+	id: Schema.Number, // Uses station_g_cd as unique physical station ID
 	name: Schema.String,
 	nameKana: Schema.String,
 	nameRomaji: Schema.String,
 	nameEn: Schema.NullOr(Schema.String),
 	nameEnFormal: Schema.NullOr(Schema.String),
-	lineId: Schema.Number,
 	prefectureId: Schema.Number,
 	postalCode: Schema.NullOr(Schema.String),
 	address: Schema.NullOr(Schema.String),
 	location: Schema.NullOr(PointSchema),
-	openedAt: Schema.NullOr(Schema.String),
-	closedAt: Schema.NullOr(Schema.String),
+	openedOn: Schema.NullOr(Schema.String),
+	closedOn: Schema.NullOr(Schema.String),
 	status: Schema.Literal("active", "pre_opening", "defunct"),
-	sort: Schema.NullOr(Schema.Number),
+});
+
+export const StationLineDbSchema = Schema.Struct({
+	stationId: Schema.Number,
+	lineId: Schema.Number,
+	originalStationId: Schema.Number,
+	sortOrder: Schema.NullOr(Schema.Number),
 });
 
 export type StationCsv = typeof StationCsvSchema.Type;
 export type StationDb = typeof StationDbSchema.Type;
+export type StationLineDb = typeof StationLineDbSchema.Type;

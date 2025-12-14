@@ -5,29 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1765491660995,
-      "tag": "0000_fair_jigsaw",
+      "when": 1765706779660,
+      "tag": "0000_init",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1765540302187,
-      "tag": "0001_better-auth",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1765653061459,
-      "tag": "0002_use_postgis",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1765707270917,
-      "tag": "0003_update-schema",
+      "when": 1765709059984,
+      "tag": "0001_normalize_stations",
       "breakpoints": true
     }
   ]

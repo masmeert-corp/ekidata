@@ -1,7 +1,7 @@
 import { Schema } from "effect";
 
 import { EntityStatus } from "@/schemas/shared";
-import { NullNum, NullStr } from "@/schemas/utils";
+import { NullNum, NullStr, PointSchema } from "@/schemas/utils";
 
 export const LineCsvSchema = Schema.Struct({
 	line_cd: Schema.NumberFromString,
@@ -20,11 +20,6 @@ export const LineCsvSchema = Schema.Struct({
 	zoom: NullNum,
 	e_status: EntityStatus,
 	e_sort: NullNum,
-});
-
-const PointSchema = Schema.Struct({
-	x: Schema.Number,
-	y: Schema.Number,
 });
 
 export const LineDbSchema = Schema.Struct({

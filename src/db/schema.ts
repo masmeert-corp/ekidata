@@ -99,16 +99,12 @@ export const line = pgTable(
 export const station = pgTable(
 	"station",
 	{
-		id: integer().primaryKey(),
-		groupId: integer("group_id").notNull(),
+		id: integer().primaryKey(), // Uses station_g_cd (group_id) as unique physical station
 		name: varchar({ length: 256 }).notNull(),
 		nameKana: varchar("name_kana", { length: 256 }),
 		nameRomaji: varchar("name_romaji", { length: 256 }),
 		nameEn: varchar("name_en", { length: 256 }),
 		nameEnFormal: varchar("name_en_formal", { length: 256 }),
-		lineId: integer("line_id")
-			.notNull()
-			.references(() => line.id),
 		prefectureId: smallint("prefecture_id")
 			.notNull()
 			.references(() => prefecture.id),
@@ -118,9 +114,27 @@ export const station = pgTable(
 		openedOn: date("opened_on"),
 		closedOn: date("closed_on"),
 		status: entityStatusEnum().notNull().default("active"),
-		sortOrder: integer("sort_order"),
 	},
 	(t) => [index("station_location_idx").using("gist", t.location)],
+);
+
+export const stationLine = pgTable(
+	"station_line",
+	{
+		stationId: integer("station_id")
+			.notNull()
+			.references(() => station.id),
+		lineId: integer("line_id")
+			.notNull()
+			.references(() => line.id),
+		originalStationId: integer("original_station_id").notNull(),
+		sortOrder: integer("sort_order"),
+	},
+	(t) => [
+		primaryKey({ columns: [t.stationId, t.lineId] }),
+		index("station_line_station_id_idx").on(t.stationId),
+		index("station_line_line_id_idx").on(t.lineId),
+	],
 );
 
 export const stampRally = pgTable("stamp_rally", {
@@ -187,8 +201,6 @@ export const stamp = pgTable(
 	],
 );
 
-// Auth tables
-
 export const user = pgTable("user", {
 	id: text("id").primaryKey(),
 	name: text("name").notNull(),
@@ -239,8 +251,6 @@ export const verification = pgTable("verification", {
 	updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-// Relations - Domain tables
-
 export const regionRelations = relations(region, ({ many }) => ({
 	prefecture: many(prefecture),
 }));
@@ -266,19 +276,27 @@ export const lineRelations = relations(line, ({ one, many }) => ({
 		fields: [line.companyId],
 		references: [company.id],
 	}),
-	station: many(station),
+	stationLines: many(stationLine),
 }));
 
 export const stationRelations = relations(station, ({ one, many }) => ({
-	line: one(line, {
-		fields: [station.lineId],
-		references: [line.id],
-	}),
 	prefecture: one(prefecture, {
 		fields: [station.prefectureId],
 		references: [prefecture.id],
 	}),
+	stationLines: many(stationLine),
 	stamp: many(stamp),
+}));
+
+export const stationLineRelations = relations(stationLine, ({ one }) => ({
+	station: one(station, {
+		fields: [stationLine.stationId],
+		references: [station.id],
+	}),
+	line: one(line, {
+		fields: [stationLine.lineId],
+		references: [line.id],
+	}),
 }));
 
 export const stampRallyRelations = relations(stampRally, ({ many }) => ({
@@ -310,8 +328,6 @@ export const stampRelations = relations(stamp, ({ one }) => ({
 		references: [stampRally.id],
 	}),
 }));
-
-// Relations - Auth tables
 
 export const userRelations = relations(user, ({ many }) => ({
 	account: many(account),

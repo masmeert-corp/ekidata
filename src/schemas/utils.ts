@@ -43,3 +43,10 @@ export const NumEnum = <const T extends string[]>(
 		decode: (s) => (values[Number(s)] ?? fallback) as T[number],
 		encode: (v) => String(values.indexOf(v)),
 	});
+
+export const PointSchema = Schema.Struct({
+	x: Schema.Number,
+	y: Schema.Number,
+});
+
+export type Point = typeof PointSchema.Type;

@@ -2,9 +2,14 @@ import { Effect } from "effect";
 
 import type { CompanyCsv, CompanyDb } from "@/schemas/company";
 import type { LineCsv, LineDb } from "@/schemas/line";
-import type { StationCsv, StationDb } from "@/schemas/station";
+import type { StationCsv, StationDb, StationLineDb } from "@/schemas/station";
 
 import { KuroshiroService } from "@/services/kuroshiro";
+
+export type StationMapped = {
+	station: StationDb;
+	stationLine: StationLineDb;
+};
 
 export const mapCompany = (row: CompanyCsv) =>
 	Effect.gen(function* () {
@@ -56,6 +61,7 @@ export const mapLine = (row: LineCsv) =>
 		} satisfies LineDb;
 	});
 
+
 export const mapStation = (row: StationCsv) =>
 	Effect.gen(function* () {
 		const kuroshiro = yield* KuroshiroService;
@@ -64,23 +70,29 @@ export const mapStation = (row: StationCsv) =>
 		const nameRomaji =
 			row.station_name_r ?? (yield* kuroshiro.toRomaji(row.station_name));
 
-		return {
-			id: row.station_cd,
-			groupId: row.station_g_cd,
+		const station: StationDb = {
+			id: row.station_g_cd,
 			name: row.station_name,
 			nameKana,
 			nameRomaji,
 			nameEn: row.name_english ?? null,
 			nameEnFormal: row.name_english_formal ?? null,
-			lineId: row.line_cd,
 			prefectureId: row.pref_cd,
 			postalCode: row.post,
 			address: row.address,
 			location:
 				row.lon != null && row.lat != null ? { x: row.lon, y: row.lat } : null,
-			openedAt: row.open_ymd,
-			closedAt: row.close_ymd,
+			openedOn: row.open_ymd,
+			closedOn: row.close_ymd,
 			status: row.e_status,
-			sort: row.e_sort,
-		} satisfies StationDb;
+		};
+
+		const stationLine: StationLineDb = {
+			stationId: row.station_g_cd,
+			lineId: row.line_cd,
+			originalStationId: row.station_cd,
+			sortOrder: row.e_sort,
+		};
+
+		return { station, stationLine } satisfies StationMapped;
 	});
